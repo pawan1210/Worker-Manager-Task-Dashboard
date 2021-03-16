@@ -13,3 +13,4 @@ mongoose.connect(process.env.MONGO_URL_LOCAL, {
 
 mongoose.Promise = Promise;
 module.exports.User = require("./user");
+module.exports.Task = require("./task");

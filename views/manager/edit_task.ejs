@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="edit-task-form" action="/task/<%= task._id %>/edit?_method=put" method="POST">
+        <input type="text" value="<%= task.name %>" name="name" required>
+        <input type="text" value="<%= task.description %>" name="description" required>
+        <input type="number" value="<%= task.maximum_points %>" name="maximum_points" min="1" max="500" required>
+        <input type="datetime-local" value="<%= task.deadline.toISOString().substring(0,task.deadline.toISOString().length-1) %>" name="deadline" required>
+        <button>Edit</button>
+    </form>
+</body>
+
+
+</html>

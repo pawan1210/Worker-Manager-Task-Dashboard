@@ -15,7 +15,7 @@ var userSchema = new mongoose.Schema({
   },
   access: {
     type: String,
-    enum: ["Manager", "Worker"],
+    enum: ["manager", "worker"],
   },
 });
 

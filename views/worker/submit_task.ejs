@@ -16,6 +16,7 @@
     <h3>Maximum Points - <%= task.maximum_points %>
     </h3>
     <form method="POST" action="/task/<%= task._id %>/submit">
+        <input type="text" value="submitted" name="status" readonly hidden>
         <textarea name="text" id="" cols="30" rows="10"></textarea>
         <input name="files" type="file">
         <button>Submit</button>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/manager/submitted_task.css">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <h3><a href="/dashboard/manager">Task- Dashboard</a></h3>
+        <div>
+            <li><a href="/task/add">Add-Task</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </div>
+    </nav>
+    <% if(task.status==="submitted"){ %>
+        <form action="/task/<%= task._id %>/submission" method="POST">
+            <div style="width: 100%; margin-left: 50px;">
+                <h4>Task Name - <%= task.name %>
+                </h4>
+                <h4>Task Description - <%= task.description %>
+                </h4>
+                <h4>Maximum Points - <%= task.maximum_points %>
+                </h4>
+                <p><%= task.solution.text %></p>
+            </div>
+            <select name="status">
+                <option value="approved">Accept</option>
+                <option value="rejected">Reject</option>
+            </select>
+            <input type="number" placeholder="score" name="score">
+            <button>Mark</button>
+        </form>
+    <% } if(task.status==="approved" || task.status==="rejected"){ %>
+        <form action="/task/<%= task._id %>/submission" method="POST">
+            <div style="width: 100%; margin-left: 50px;">
+                <h4>Task Name - <%= task.name %>
+                </h4>
+                <h4>Task Description - <%= task.description %>
+                </h4>
+                <h4>Maximum Points - <%= task.maximum_points %>
+                </h4>
+                <h4>Solution</h4>
+                <textarea style="width: 90%; height: 100px;" readonly><%= task.solution.text %></textarea> 
+            </div>
+            <h4>Status - </h4>
+            <input type="text"  name="score" value="<%= task.status %>" readonly>
+            <h4>Score - </h4>
+            <input type="number"  name="score" value="<%= task.score %>" readonly>
+        </form>
+    <% }else{ %>
+        <h1 style="text-align: center;">Worker has not submitted the task yet</h1>
+    <% } %>
+</body>
+</html>

@@ -10,7 +10,6 @@ const middleware = require("./middleware");
 const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
 const dotenv = require("dotenv");
-const { connect } = require("mongoose");
 
 dotenv.config();
 app.use(methodOverride("_method"));
@@ -30,8 +29,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  console.log(req.session);
-  res.redirect("/login");
+  res.render("home");
 });
 
 app.get("/register", (req, res) => {
@@ -49,15 +47,15 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/worker/profile/edit",(req,res)=>{
-    res.render("./worker/edit_profile",{user:req.session.user});
-})
+app.get("/worker/profile/edit", (req, res) => {
+  res.render("./worker/edit_profile", { user: req.session.user });
+});
 
 app.put("/worker/profile/edit", async (req, res) => {
   const user = await db.User.findByIdAndUpdate(req.session.user._id, req.body, {
     returnOriginal: false,
   });
-  req.session.user=user;
+  req.session.user = user;
   res.redirect("/dashboard/worker");
 });
 
@@ -117,18 +115,20 @@ app.put("/task/:task_id/edit", async (req, res) => {
 });
 
 app.get("/task/:task_id/assign", async (req, res) => {
-  const workers = await db.User.find({access:"worker"});
-  res.render("./manager/assign_task", { workers: workers,task_id:req.params.task_id });
+  const workers = await db.User.find({ access: "worker" });
+  res.render("./manager/assign_task", {
+    workers: workers,
+    task_id: req.params.task_id,
+  });
 });
 
-
 app.post("/task/:task_id/assign", async (req, res) => {
-  await db.Task.findByIdAndUpdate(req.params.task_id,req.body);
+  await db.Task.findByIdAndUpdate(req.params.task_id, req.body);
   res.redirect("/dashboard/manager");
 });
 
 app.get("/dashboard/worker", middleware.isLoggedInWorker, async (req, res) => {
-  const tasks = await db.Task.find({worker_id:req.session.user._id});
+  const tasks = await db.Task.find({ worker_id: req.session.user._id });
   res.render("./worker/dashboard", { tasks: tasks });
 });
 
@@ -138,10 +138,24 @@ app.get("/task/:task_id/submit", async (req, res) => {
 });
 
 app.post("/task/:task_id/submit", async (req, res) => {
-  req.body.worker_id = req.session.user._id;
-  req.body.task_id = req.params.task_id;
-  await db.Solution.create(req.body);
+  await db.Task.findByIdAndUpdate(req.params.task_id, { solution: req.body });
   res.redirect("/dashboard/worker");
+});
+
+app.get("/task/:task_id/submission", async (req, res) => {
+  const task = await db.Task.findById(req.params.task_id);
+  console.log(task.solution);
+  res.render("./manager/submitted_task", { task: task });
+});
+
+app.post("/task/:task_id/submission", async (req, res) => {
+  const task = await db.Task.findByIdAndUpdate(req.params.task_id, req.body);
+  res.redirect("/dashboard/manager");
+});
+
+app.get("/tasks", async (req, res) => {
+  console.log(req.query);
+  res.json({"message":"message"});
 });
 
 app.listen(process.env.PORT || 3000, () => {

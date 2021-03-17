@@ -13,7 +13,17 @@
     <div>
         <h1>Assigned Tasks</h1>
         <% tasks.forEach((task)=>{ %>
-            <li>Name - <%= task.name %>   Deadline - <%= task.deadline.toLocaleString() %> Maximum Points - <%= task.maximum_points %> <a href="/task/<%= task._id %>/submit">Submit Solution</a></li>
+            <% if(task.status==="pending"){ %>
+                <li>Name - <%= task.name %>   Deadline - <%= task.deadline.toLocaleString() %> Maximum Points - <%= task.maximum_points %> <a href="/task/<%= task._id %>/submit">Submit Solution</a></li>
+            <% } %>    
+        <% }) %>
+    </div>
+    <div>
+        <h1>Submission History</h1>
+        <% tasks.forEach((task)=>{ %>
+            <% if(task.status==="approved" || task.status==="rejected"){ %>
+                <li>Name - <%= task.name %></li>
+            <% } %>
         <% }) %>
     </div>
 </body>

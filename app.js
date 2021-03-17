@@ -144,18 +144,63 @@ app.post("/task/:task_id/submit", async (req, res) => {
 
 app.get("/task/:task_id/submission", async (req, res) => {
   const task = await db.Task.findById(req.params.task_id);
-  console.log(task.solution);
   res.render("./manager/submitted_task", { task: task });
 });
 
 app.post("/task/:task_id/submission", async (req, res) => {
+  req.body.submitted_on = new Date().toISOString().split("T")[0];
   const task = await db.Task.findByIdAndUpdate(req.params.task_id, req.body);
   res.redirect("/dashboard/manager");
 });
 
 app.get("/tasks", async (req, res) => {
-  console.log(req.query);
-  res.json({"message":"message"});
+  let tasks = null;
+  let status = req.query.status;
+  let page = Math.max(parseInt(req.query.page), 1);
+  let date = req.query.date?new Date(new Date(req.query.date).getTime()-86400000).toISOString():req.query.date;
+  if (status === "pending") {
+    if (date) {
+      tasks = await db.Task.find({ status: status, created_on: date })
+        .skip((page - 1) * 5)
+        .limit(5);
+    } else {
+      tasks = await db.Task.find({ status: status })
+        .skip((page - 1) * 5)
+        .limit(5);
+    }
+  } else if (status === "assigned" || status === "submitted") {
+    if (date) {
+      tasks = await db.Task.find({
+        $or: [{ status: "assigned" }, { status: "submitted" }],
+        created_on: date,
+      })
+        .skip((page - 1) * 5)
+        .limit(5);
+    } else {
+      tasks = await db.Task.find({
+        $or: [{ status: "assigned" }, { status: "submitted" }],
+      })
+        .skip((page - 1) * 5)
+        .limit(5);
+    }
+  } else {
+    if (date) {
+      tasks = await db.Task.find({
+        $or: [{ status: "approved" }, { status: "rejected" }],
+        created_on: date,
+      })
+        .skip((page - 1) * 5)
+        .limit(5);
+    } else {
+      tasks = await db.Task.find({
+        $or: [{ status: "approved" }, { status: "rejected" }],
+      })
+        .skip((page - 1) * 5)
+        .limit(5);
+    }
+  }
+
+  res.json({ tasks: tasks });
 });
 
 app.listen(process.env.PORT || 3000, () => {

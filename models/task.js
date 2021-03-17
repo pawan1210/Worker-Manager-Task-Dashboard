@@ -18,31 +18,32 @@ var taskSchema = new mongoose.Schema({
   maximum_points: {
     type: Number,
   },
-  score:{
-    type:Number
+  score: {
+    type: Number,
   },
   status: {
     type: String,
-    default:"pending",
-    enum: ["pending", "assigned","submitted","rejected","approved"],
+    default: "pending",
+    enum: ["pending", "assigned", "submitted", "approved", "rejected"],
   },
   deadline: {
     type: Date,
   },
-  solution:{
-    text:{
-      type:String,
+  solution: {
+    text: {
+      type: String,
     },
-    files:{
-      type:[String]
-    }
+    files: {
+      type: [String],
+    },
   },
-  created_on:{
-    type:Date
+  created_on: {
+    type: Date,
+    default: new Date().toISOString().split("T")[0],
   },
-  submitted_on:{
-    type:Date
-  }
+  submitted_on: {
+    type: Date,
+  },
 });
 
 var Task = mongoose.model("Task", taskSchema);

@@ -5,6 +5,10 @@ var taskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  worker_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   name: {
     type: String,
   },
@@ -13,6 +17,10 @@ var taskSchema = new mongoose.Schema({
   },
   maximum_points: {
     type: Number,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "assigned", "done"],
   },
   deadline: {
     type: Date,

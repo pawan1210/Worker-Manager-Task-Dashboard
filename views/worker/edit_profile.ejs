@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form method="POST" action="/worker/profile/edit?_method=PUT">
+        <input type="text" name="name" placeholder="name" value="<%= user.name %>" required>
+        <input type="email" name="email" placeholder="email" value="<%= user.email %>" required>
+        <input type="text" name="phone" placeholder="phone" value="<%= user.phone %>" pattern="[1-9]{1}[0-9]{9}"
+            required>
+        <button>Edit</button>
+    </form>
+</body>
+
+</html>

@@ -13,10 +13,31 @@
         <button><a href="/task/add">Add-Task</a></button>
     </div>
     <div>
-        Tasks-
+        Unassigned Tasks
         <% tasks.forEach((task)=>{ %>
-            <p><%= task.name %></p>
-            <a href="/task/<%= task._id %>/edit">Edit</a>
+            <% if(task.status==="pending"){ %>
+                <p><%= task.name %></p>
+                <a href="/task/<%= task._id %>/edit">Edit</a>
+                <a href="/task/<%= task._id %>/assign">Assign</a>
+            <% } %>
+        <% }) %>
+    </div>
+    <div>
+        Assigned Tasks
+        <% tasks.forEach((task)=>{ %>
+            <% if(task.status==="assigned"){ %>
+                <p><%= task.name %></p>
+                <a href="/task/<%= task._id %>/view">View</a>
+            <% } %>
+        <% }) %>
+    </div>
+    <div>
+        Completed Tasks
+        <% tasks.forEach((task)=>{ %>
+            <% if(task.status==="done"){ %>
+                <p><%= task.name %></p>
+                <a href="#">View Solution</a>
+            <% } %>
         <% }) %>
     </div>
 </body>

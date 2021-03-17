@@ -8,7 +8,11 @@ const db = require("./models");
 const session = require("express-session");
 const middleware = require("./middleware");
 const methodOverride = require("method-override");
+const MongoStore = require("connect-mongo");
+const dotenv = require("dotenv");
+const { connect } = require("mongoose");
 
+dotenv.config();
 app.use(methodOverride("_method"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,12 +21,16 @@ app.use(express.static("public"));
 app.use(
   session({
     secret: "secret",
-    resave: false,
+    resave: true,
     saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL_LOCAL,
+    }),
   })
 );
 
 app.get("/", (req, res) => {
+  console.log(req.session);
   res.redirect("/login");
 });
 
@@ -39,6 +47,18 @@ app.post("/register", async (req, res) => {
   } catch {
     res.redirect("/register");
   }
+});
+
+app.get("/worker/profile/edit",(req,res)=>{
+    res.render("./worker/edit_profile",{user:req.session.user});
+})
+
+app.put("/worker/profile/edit", async (req, res) => {
+  const user = await db.User.findByIdAndUpdate(req.session.user._id, req.body, {
+    returnOriginal: false,
+  });
+  req.session.user=user;
+  res.redirect("/dashboard/worker");
 });
 
 app.get("/login", (req, res) => {
@@ -67,10 +87,14 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.get("/dashboard/manager", middleware.isLoggedIn, async (req, res) => {
-  const tasks = await db.Task.find({ manager_id: req.session.user._id });
-  res.render("./manager/dashboard", { tasks: tasks });
-});
+app.get(
+  "/dashboard/manager",
+  middleware.isLoggedInManager,
+  async (req, res) => {
+    const tasks = await db.Task.find({ manager_id: req.session.user._id });
+    res.render("./manager/dashboard", { tasks: tasks });
+  }
+);
 
 app.get("/task/add", (req, res) => {
   res.render("./manager/add_task");
@@ -79,7 +103,7 @@ app.get("/task/add", (req, res) => {
 app.post("/task/add", async (req, res) => {
   req.body.manager_id = req.session.user._id;
   await db.Task.create(req.body);
-  res.send("Task Added Successfully");
+  res.redirect("/dashboard/manager");
 });
 
 app.get("/task/:task_id/edit", async (req, res) => {
@@ -90,6 +114,34 @@ app.get("/task/:task_id/edit", async (req, res) => {
 app.put("/task/:task_id/edit", async (req, res) => {
   const task = await db.Task.findByIdAndUpdate(req.params.task_id, req.body);
   res.redirect("/dashboard/manager");
+});
+
+app.get("/task/:task_id/assign", async (req, res) => {
+  const workers = await db.User.find({access:"worker"});
+  res.render("./manager/assign_task", { workers: workers,task_id:req.params.task_id });
+});
+
+
+app.post("/task/:task_id/assign", async (req, res) => {
+  await db.Task.findByIdAndUpdate(req.params.task_id,req.body);
+  res.redirect("/dashboard/manager");
+});
+
+app.get("/dashboard/worker", middleware.isLoggedInWorker, async (req, res) => {
+  const tasks = await db.Task.find({worker_id:req.session.user._id});
+  res.render("./worker/dashboard", { tasks: tasks });
+});
+
+app.get("/task/:task_id/submit", async (req, res) => {
+  const task = await db.Task.findById(req.params.task_id);
+  res.render("./worker/submit_task", { task: task });
+});
+
+app.post("/task/:task_id/submit", async (req, res) => {
+  req.body.worker_id = req.session.user._id;
+  req.body.task_id = req.params.task_id;
+  await db.Solution.create(req.body);
+  res.redirect("/dashboard/worker");
 });
 
 app.listen(process.env.PORT || 3000, () => {

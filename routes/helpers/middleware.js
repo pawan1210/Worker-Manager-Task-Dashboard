@@ -15,7 +15,7 @@ const isLoggedInWorker = (req, res, next) => {
 
 const isLoggedInCommon=(req,res,next)=>{
   if(req.session.user){
-    res.redirect('back');
+    res.redirect(`/${req.session.user.access}/dashboard`);
   }else{
     next();
   }

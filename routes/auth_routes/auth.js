@@ -6,7 +6,7 @@ const constants = require("./constants");
 const middleware=require("../helpers/middleware");
 
 
-router.get("/",middleware.isLoggedIn.common, (req, res) => {
+router.get("",middleware.isLoggedIn.common, (req, res) => {
   res.render("home");
 });
 

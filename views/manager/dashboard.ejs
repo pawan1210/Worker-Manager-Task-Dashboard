@@ -19,57 +19,60 @@
     </nav>
     <div class="task-classification-div">
         <div class="task-div" style="border-right:1px solid black ;">
-            <h3>Unassigned Tasks</h3>
-            <div class="filter-div">
-                <input type="date" id="pending-date-input">
-                <button id="pending-search-btn">Search</button>
-            </div>
-            <div class="pagination-div"><button id="pending-decrement-button">Previous</button><button id="pending-increment-button">Next</button></div>
-            <!-- <% tasks.forEach((task)=>{ %>
-                <% if(task.status==="pending"){ %>
-                <div class="single-task-div">
-                    <h3><%= task.name %></h3>
-                    <li><a href="/task/<%= task._id %>/edit">Edit</a></li>
-                    <li><a href="/task/<%= task._id %>/assign">Assign</a></li>
+            <div class="task-inner-div">
+                <h3>Unassigned Tasks</h3>
+                <div class="filter-div">
+                    <input type="date" id="unassigned-date-input">
+                    <button id="unassigned-search-btn">Search</button>
                 </div>
-                <% } %>
-            <% }) %> -->
+            </div>
+            <div class="pagination-div">
+                <button id="unassigned-decrement-button">
+                    < </button>
+                        <button id="unassigned-increment-button">></button>
+            </div>
         </div>
-        
-        <div class="task-div">
+        <div class="task-div"">
+            <div class=" task-inner-div">
             <h3>Assigned Tasks</h3>
-            <div class="filter-div">
+            <div class=" filter-div">
                 <input type="date" id="assigned-date-input">
+                <select id="assigned-select-input">
+                    <option value="pending">Pending</option>
+                    <option value="submitted">Submitted</option>     
+                </select>
                 <button id="assigned-search-btn">Search</button>
             </div>
-            <!-- <% tasks.forEach((task)=>{ %>
-                <% if(task.status==="assigned" || task.status==="submitted"){ %>
-                    <div class="single-task-div">
-                        <h3><%= task.name %></h3>
-                        <li><a href="/task/<%= task._id %>/submission">Review</a></li>
-                    </div>
-                <% } %>
-            <% }) %> -->
         </div>
-        <div class="task-div" style="border-left:1px solid black ;">
+        <div class="pagination-div">
+            <button id="assigned-decrement-button">
+                < </button>
+                    <button id="assigned-increment-button">></button>
+        </div>
+    </div>
+    <div class="task-div" style="border-left:1px solid black ;">
+        <div class="task-inner-div">
             <h3>Reviewed Tasks</h3>
-            <div class="filter-div">
+            <div class=" filter-div">
                 <input type="date" id="reviewed-date-input">
+                <select id="reviewed-select-input">
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
                 <button id="reviewed-search-btn">Search</button>
             </div>
-            <!-- <% tasks.forEach((task)=>{ %>
-                <div class="single-task-div">
-                    <% if(task.status==="approved" || task.status==="rejected"){ %>
-                        <h3><%= task.name %></h3>
-                        <li><a href="/task/<%= task._id %>/submission">View Solution</a></li>
-                    <% } %>
-                </div>
-            <% }) %> -->
         </div>
+        <div class="pagination-div">
+            <button id="reviewed-decrement-button">
+                < </button>
+                    <button id="reviewed-increment-button">></button>
+        </div>
+    </div>
     </div>
 </body>
 <script src="/manager/dashboard.js"></script>
 <script>
-   
+
 </script>
+
 </html>

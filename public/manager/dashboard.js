@@ -2,8 +2,10 @@ let limit = 5;
 
 let page = {
   pending: 1,
-  assigned: 1,
-  reviewed: 1,
+  submitted: 1,
+  unassigned: 1,
+  approved: 1,
+  rejected: 1,
 };
 
 function resetDiv(div) {
@@ -12,12 +14,12 @@ function resetDiv(div) {
     childNodes[0].parentNode.removeChild(childNodes[0]);
   }
 }
-let getPendingTasks = async () => {
-  let date = document.getElementById("pending-date-input").value;
+let getUnassignedTasks = async () => {
+  let date = document.getElementById("unassigned-date-input").value;
   let data = await fetch(
-    `/tasks?status=pending&page=${page.pending}&date=${date}`
+    `/tasks?status=unassigned&page=${page.unassigned}&date=${date}`
   ).then((response) => response.json());
-  let task_div = document.getElementsByClassName("task-div")[0];
+  let task_div = document.getElementsByClassName("task-inner-div")[0];
   resetDiv(task_div);
   data.tasks.forEach((task) => {
     let div = document.createElement("div");
@@ -43,10 +45,12 @@ let getPendingTasks = async () => {
 
 let getAssignedTasks = async () => {
   let date = document.getElementById("assigned-date-input").value;
+  let status = document.getElementById("assigned-select-input").value;
+  console.log(status);
   let data = await fetch(
-    `/tasks?status=assigned&page=${page.assigned}&date=${date}`
+    `/tasks?status=${status}&page=${page[status]}&date=${date}`
   ).then((response) => response.json());
-  let task_div = document.getElementsByClassName("task-div")[1];
+  let task_div = document.getElementsByClassName("task-inner-div")[1];
   resetDiv(task_div);
   data.tasks.forEach((task) => {
     let div = document.createElement("div");
@@ -66,10 +70,11 @@ let getAssignedTasks = async () => {
 
 let getReviewedTasks = async () => {
   let date = document.getElementById("reviewed-date-input").value;
+  let status = document.getElementById("reviewed-select-input").value;
   let data = await fetch(
-    `/tasks?status=reviewed&page=${page.assigned}&date=${date}`
+    `/tasks?status=${status}&page=${page[status]}&date=${date}`
   ).then((response) => response.json());
-  let task_div = document.getElementsByClassName("task-div")[2];
+  let task_div = document.getElementsByClassName("task-inner-div")[2];
   resetDiv(task_div);
   data.tasks.forEach((task) => {
     let div = document.createElement("div");
@@ -78,7 +83,7 @@ let getReviewedTasks = async () => {
     h3.appendChild(document.createTextNode(task.name));
     let li1 = document.createElement("li");
     let a1 = document.createElement("a");
-    a1.setAttribute("href", `/task/${task._id}/submission`);
+    a1.setAttribute("href", `/task/${task._id}/mark`);
     a1.appendChild(document.createTextNode("View Solution"));
     li1.appendChild(a1);
     div.appendChild(h3);
@@ -88,27 +93,75 @@ let getReviewedTasks = async () => {
 };
 
 document
-  .getElementById("pending-search-btn")
-  .addEventListener("click", getPendingTasks);
+  .getElementById("unassigned-search-btn")
+  .addEventListener("click", getUnassignedTasks);
+
+document
+  .getElementById("unassigned-increment-button")
+  .addEventListener("click", () => {
+    page.unassigned = page.pending + 1;
+    getUnassignedTasks();
+  });
+
+document
+  .getElementById("unassigned-decrement-button")
+  .addEventListener("click", () => {
+    page.unassigned = Math.max(page.assigned - 1, 1);
+    getUnassignedTasks();
+  });
 
 document
   .getElementById("assigned-search-btn")
   .addEventListener("click", getAssignedTasks);
 
 document
-  .getElementById("pending-decrement-button")
+  .getElementById("assigned-increment-button")
   .addEventListener("click", () => {
-    page.pending = Math.max(page.pending - 1, 1);
-    getPendingTasks();
+    let status = document.getElementById("assigned-select-input").value;
+    if (status === "pending") {
+      page.pending = page.pending + 1;
+    } else {
+      page.submitted = page.submitted + 1;
+    }
+    getAssignedTasks();
   });
 
 document
-  .getElementById("pending-increment-button")
+  .getElementById("assigned-decrement-button")
   .addEventListener("click", () => {
-    page.pending = page.pending + 1;
-    getPendingTasks();
+    let status = document.getElementById("assigned-select-input").value;
+    if (status === "pending") {
+      page.pending = Math.max(page.pending - 1, 1);
+    } else {
+      page.submitted = Math.max(page.submitted - 1, 1);
+    }
+    getAssignedTasks();
   });
 
+document
+  .getElementById("reviewed-increment-button")
+  .addEventListener("click", () => {
+    let status = document.getElementById("reviewed-select-input").value;
+    if (status === "approved") {
+      page.approved = page.approved + 1;
+    } else {
+      page.rejected = page.rejected + 1;
+    }
+    getReviewedTasks();
+  });
+
+document
+  .getElementById("reviewed-decrement-button")
+  .addEventListener("click", () => {
+    let status = document.getElementById("reviewed-select-input").value;
+    if (status === "approved") {
+      page.approved = Math.max(page.approved - 1, 1);
+    } else {
+      page.rejected = Math.max(page.rejected - 1, 1);
+    }
+    getReviewedTasks();
+  });
+
+getUnassignedTasks();
 getAssignedTasks();
-getPendingTasks();
 getReviewedTasks();

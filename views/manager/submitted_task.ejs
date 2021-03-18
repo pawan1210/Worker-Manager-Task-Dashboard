@@ -24,17 +24,18 @@
                 </h4>
                 <h4>Maximum Points - <%= task.maximum_points %>
                 </h4>
+                <h4>Solution</h4>
                 <p><%= task.solution.text %></p>
             </div>
             <select name="status">
                 <option value="approved">Accept</option>
                 <option value="rejected">Reject</option>
             </select>
-            <input type="number" placeholder="score" name="score">
+            <input type="number" placeholder="score" name="score" min="0">
             <button>Mark</button>
         </form>
-    <% } if(task.status==="approved" || task.status==="rejected"){ %>
-        <form action="/task/<%= task._id %>/submission" method="POST">
+    <% } else if(task.status==="approved" || task.status==="rejected"){ %>
+        <form action="/task/<%= task._id %>/mark" method="POST">
             <div style="width: 100%; margin-left: 50px;">
                 <h4>Task Name - <%= task.name %>
                 </h4>

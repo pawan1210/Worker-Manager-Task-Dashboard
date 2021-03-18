@@ -20,7 +20,7 @@
     <form method="POST" action="/task/<%= task_id %>/assign">
         <input type="number" placeholder="maximum-points" name="maximum_points" min="1" max="500" required>
         <input type="datetime-local" placeholder="deadline" name="deadline" required>
-        <input type="text" name="status" value="assigned" hidden readonly>
+        <input type="text" name="status" value="pending" hidden readonly>
         <select name="worker_id">
             <% workers.forEach((worker)=>{ %>
                 <option value="<%= worker._id %>"><%= worker.name %></option>

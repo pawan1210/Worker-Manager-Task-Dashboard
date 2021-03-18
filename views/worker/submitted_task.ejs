@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/worker/submit_task.css">
+    <link rel="stylesheet" href="/worker/submitted_task.css">
     <title>Document</title>
 </head>
-
 <body>
     <nav>
         <h3><a href="/dashboard/worker">Task- Dashboard</a></h3>
@@ -16,22 +14,17 @@
             <li><a href="/logout">Logout</a></li>
         </div>
     </nav>
-    
-    <form method="POST" action="/task/<%= task._id %>/submit">
+    <form>
         <div style="width: 100%; margin-left: 50px;">
             <h4>Task Name - <%= task.name %>
             </h4>
-            <h4>Problem Statement - <%= task.description %>
+            <h4>Task Description - <%= task.description %>
             </h4>
             <h4>Maximum Points - <%= task.maximum_points %>
             </h4>
             <h4>Solution</h4>
+            <textarea style="width: 90%; height: 100px;" readonly><%= task.solution.text %></textarea>
         </div>
-        <input type="text" value="submitted" name="status" readonly hidden>
-        <textarea name="text" id="" cols="30" rows="10" required></textarea>
-        <input name="files" type="file">
-        <button>Submit</button>
     </form>
 </body>
-
 </html>

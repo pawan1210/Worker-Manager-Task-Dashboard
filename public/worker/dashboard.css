@@ -36,8 +36,8 @@ nav h3 {
 }
 
 .task-div {
-  width: 32%;
-  max-width: 32%;
+  width: 45%;
+  max-width: 45%;
   min-height: 500px;
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@ nav h3 {
 }
 
 .single-task-div li {
-  width: 100px;
+  width: 150px;
   color: white !important;
   border: 1px solid #f79ca4;
   text-align: center;
@@ -74,7 +74,6 @@ nav h3 {
 }
 
 .task-div .pagination-div {
-  background-color: ;
   display: flex;
   width: 100%;
   justify-content: space-around;
@@ -98,8 +97,8 @@ input[type="date"] {
   width: 100px;
 }
 
-select{
+select {
   background-color: #f0ede4;
-  width: 100px;
-  border:2px solid black;
+  width: 150px;
+  border: 2px solid black;
 }

@@ -5,27 +5,54 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/worker/dashboard.css">
     <title>Document</title>
 </head>
 
 <body>
-    <button><a href="/worker/profile/edit">Edit Profile</a></button>
-    <div>
-        <h1>Assigned Tasks</h1>
-        <% tasks.forEach((task)=>{ %>
-            <% if(task.status==="pending"){ %>
-                <li>Name - <%= task.name %>   Deadline - <%= task.deadline.toLocaleString() %> Maximum Points - <%= task.maximum_points %> <a href="/task/<%= task._id %>/submit">Submit Solution</a></li>
-            <% } %>    
-        <% }) %>
-    </div>
-    <div>
-        <h1>Submission History</h1>
-        <% tasks.forEach((task)=>{ %>
-            <% if(task.status==="approved" || task.status==="rejected"){ %>
-                <li>Name - <%= task.name %></li>
-            <% } %>
-        <% }) %>
+    <nav>
+        <h3><a href="">Task- Dashboard</a></h3>
+        <div>
+            <li><a href="/worker/profile/edit">Edit-Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </div>
+    </nav>
+    <div class="task-classification-div">
+        <div class="task-div"">
+            <div class=" task-inner-div">
+                <h3>Assigned Tasks</h3>
+                <div class=" filter-div">
+                    <input type="date" id="assigned-date-input">
+                    <button id="assigned-search-btn">Search</button>
+                </div>
+            </div>
+            <div class="pagination-div">
+                <button id="assigned-decrement-button">
+                    < </button>
+                        <button id="assigned-increment-button">></button>
+            </div>
+        </div>
+        <div class="task-div" style="border-left:1px solid black ;">
+            <div class="task-inner-div">
+                <h3>Task History</h3>
+                <div class=" filter-div">
+                    <input type="date" id="reviewed-date-input">
+                    <select id="reviewed-select-input">
+                        <option value="approved">Approved</option>
+                        <option value="submitted">Pending Review</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <button id="reviewed-search-btn">Search</button>
+                </div>
+            </div>
+            <div class="pagination-div">
+                <button id="reviewed-decrement-button">
+                    < </button>
+                        <button id="reviewed-increment-button">></button>
+            </div>
+        </div>
     </div>
 </body>
+<script src="/worker/dashboard.js"></script>
 
 </html>

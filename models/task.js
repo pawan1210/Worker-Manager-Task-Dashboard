@@ -23,8 +23,8 @@ var taskSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "pending",
-    enum: ["pending", "assigned", "submitted", "approved", "rejected"],
+    default: "unassigned",
+    enum: ["unassigned", "pending", "submitted", "approved", "rejected"],
   },
   deadline: {
     type: Date,

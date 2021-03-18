@@ -138,71 +138,55 @@ app.get("/task/:task_id/submit", async (req, res) => {
 });
 
 app.post("/task/:task_id/submit", async (req, res) => {
-  await db.Task.findByIdAndUpdate(req.params.task_id, { solution: req.body });
+  let body={};
+  body.status="submitted";
+  body.solution=req.body;
+  await db.Task.findByIdAndUpdate(req.params.task_id,body);
   res.redirect("/dashboard/worker");
 });
 
-app.get("/task/:task_id/submission", async (req, res) => {
+app.get("/task/:task_id/mark", async (req, res) => {
   const task = await db.Task.findById(req.params.task_id);
   res.render("./manager/submitted_task", { task: task });
 });
 
-app.post("/task/:task_id/submission", async (req, res) => {
+app.post("/task/:task_id/mark", async (req, res) => {
   req.body.submitted_on = new Date().toISOString().split("T")[0];
   const task = await db.Task.findByIdAndUpdate(req.params.task_id, req.body);
   res.redirect("/dashboard/manager");
 });
 
-app.get("/tasks", async (req, res) => {
-  let tasks = null;
-  let status = req.query.status;
-  let page = Math.max(parseInt(req.query.page), 1);
-  let date = req.query.date?new Date(new Date(req.query.date).getTime()-86400000).toISOString():req.query.date;
-  if (status === "pending") {
-    if (date) {
-      tasks = await db.Task.find({ status: status, created_on: date })
-        .skip((page - 1) * 5)
-        .limit(5);
-    } else {
-      tasks = await db.Task.find({ status: status })
-        .skip((page - 1) * 5)
-        .limit(5);
-    }
-  } else if (status === "assigned" || status === "submitted") {
-    if (date) {
-      tasks = await db.Task.find({
-        $or: [{ status: "assigned" }, { status: "submitted" }],
-        created_on: date,
-      })
-        .skip((page - 1) * 5)
-        .limit(5);
-    } else {
-      tasks = await db.Task.find({
-        $or: [{ status: "assigned" }, { status: "submitted" }],
-      })
-        .skip((page - 1) * 5)
-        .limit(5);
-    }
-  } else {
-    if (date) {
-      tasks = await db.Task.find({
-        $or: [{ status: "approved" }, { status: "rejected" }],
-        created_on: date,
-      })
-        .skip((page - 1) * 5)
-        .limit(5);
-    } else {
-      tasks = await db.Task.find({
-        $or: [{ status: "approved" }, { status: "rejected" }],
-      })
-        .skip((page - 1) * 5)
-        .limit(5);
-    }
-  }
+app.get("/task/:task_id/view",async(req,res)=>{
+  const task=await db.Task.findById(req.params.task_id);
+  res.render("./worker/submitted_task",{task:task});
+})
 
+app.get("/tasks", async (req, res) => {
+  console.log(req.query);
+  const status = req.query.status;
+  const page = Math.max(parseInt(req.query.page), 1);
+  const date = req.query.date
+    ? new Date(new Date(req.query.date).getTime() - 86400000).toISOString()
+    : req.query.date;
+  const queryBody = formatQueryBody(req);
+  const limit = 5;
+  const tasks = await db.Task.find(queryBody)
+    .skip((page - 1) * limit)
+    .limit(limit);
   res.json({ tasks: tasks });
 });
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server Started");
 });
+
+function formatQueryBody(req) {
+  let body = { status: req.query.status };
+  if (req.created_on) {
+    body.created_on = req.query.created_on;
+  }
+  if (req.submitted_on) {
+    body.submitted_on = req.submitted_on;
+  }
+  return body;
+}

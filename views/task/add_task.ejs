@@ -5,20 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/manager/add_task.css">
+    <link rel="stylesheet" href="/task/add_task.css">
     <title>Document</title>
 </head>
 
 <body>
     <nav>
-        <h3><a href="/dashboard/manager">Task- Dashboard</a></h3>
+        <h3><a href="/manager/dashboard">Task- Dashboard</a></h3>
         <div>
             <li><a href="/logout">Logout</a></li>
         </div>
     </nav>
-    <form action="/task/add" method="POST">
+    <form action="/task" method="POST">
         <input placeholder="task-name" name="name" required>
-        <textarea name="description" placeholder="description"></textarea>
+        <textarea name="description" placeholder="description" required></textarea>
         <button>Submit</button>
     </form>
 </body>

@@ -15,9 +15,11 @@ function resetDiv(div) {
   }
 }
 let getUnassignedTasks = async () => {
+  const manager_id = JSON.parse(localStorage.getItem("data")).manager_id;
+  const tasks_url = `/task/${manager_id}/all`;
   let date = document.getElementById("unassigned-date-input").value;
   let data = await fetch(
-    `/tasks?status=unassigned&page=${page.unassigned}&date=${date}`
+    `${tasks_url}?status=unassigned&page=${page.unassigned}&created_on=${date}`
   ).then((response) => response.json());
   let task_div = document.getElementsByClassName("task-inner-div")[0];
   resetDiv(task_div);
@@ -28,7 +30,7 @@ let getUnassignedTasks = async () => {
     h3.appendChild(document.createTextNode(task.name));
     let li1 = document.createElement("li");
     let a1 = document.createElement("a");
-    a1.setAttribute("href", `/task/${task._id}/edit`);
+    a1.setAttribute("href", `/task/${task._id}`);
     a1.appendChild(document.createTextNode("Edit"));
     li1.appendChild(a1);
     let li2 = document.createElement("li");
@@ -44,11 +46,19 @@ let getUnassignedTasks = async () => {
 };
 
 let getAssignedTasks = async () => {
+  
+  const manager_id = JSON.parse(localStorage.getItem("data")).manager_id;
+  const tasks_url = `/task/${manager_id}/all`;
   let date = document.getElementById("assigned-date-input").value;
   let status = document.getElementById("assigned-select-input").value;
-  console.log(status);
+  let url=null;
+  if(status==="pending"){
+    url = `${tasks_url}?status=${status}&page=${page[status]}&created_on=${date}`;
+  }else{
+     url = `${tasks_url}?status=${status}&page=${page[status]}&submitted_on=${date}`;
+  }
   let data = await fetch(
-    `/tasks?status=${status}&page=${page[status]}&date=${date}`
+    url
   ).then((response) => response.json());
   let task_div = document.getElementsByClassName("task-inner-div")[1];
   resetDiv(task_div);
@@ -59,7 +69,7 @@ let getAssignedTasks = async () => {
     h3.appendChild(document.createTextNode(task.name));
     let li1 = document.createElement("li");
     let a1 = document.createElement("a");
-    a1.setAttribute("href", `/task/${task._id}/mark`);
+    a1.setAttribute("href", `/task/${task._id}/review`);
     a1.appendChild(document.createTextNode("Review"));
     li1.appendChild(a1);
     div.appendChild(h3);
@@ -69,10 +79,12 @@ let getAssignedTasks = async () => {
 };
 
 let getReviewedTasks = async () => {
+  const manager_id = JSON.parse(localStorage.getItem("data")).manager_id;
+  const tasks_url = `/task/${manager_id}/all`;
   let date = document.getElementById("reviewed-date-input").value;
   let status = document.getElementById("reviewed-select-input").value;
   let data = await fetch(
-    `/tasks?status=${status}&page=${page[status]}&date=${date}`
+    `${tasks_url}?status=${status}&page=${page[status]}&submitted_on=${date}`
   ).then((response) => response.json());
   let task_div = document.getElementsByClassName("task-inner-div")[2];
   resetDiv(task_div);
@@ -83,7 +95,7 @@ let getReviewedTasks = async () => {
     h3.appendChild(document.createTextNode(task.name));
     let li1 = document.createElement("li");
     let a1 = document.createElement("a");
-    a1.setAttribute("href", `/task/${task._id}/mark`);
+    a1.setAttribute("href", `/task/${task._id}/review`);
     a1.appendChild(document.createTextNode("View Solution"));
     li1.appendChild(a1);
     div.appendChild(h3);

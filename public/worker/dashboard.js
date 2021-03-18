@@ -1,4 +1,4 @@
-let limit = 5;
+const limit = 5;
 
 let page = {
   pending: 1,
@@ -6,6 +6,10 @@ let page = {
   approved: 1,
   rejected: 1,
 };
+
+function setUserId(id){
+  worker_id=id;
+}
 
 function resetDiv(div) {
   var childNodes = div.getElementsByClassName("single-task-div");
@@ -15,9 +19,11 @@ function resetDiv(div) {
 }
 
 let getAssignedTasks = async () => {
+  let worker_id = JSON.parse(localStorage.getItem("data")).worker_id;
+  let tasks_url = `/task/${worker_id}/all`;
   let date = document.getElementById("assigned-date-input").value;
   let data = await fetch(
-    `/tasks?status=pending&page=${page.pending}&date=${date}`
+    `${tasks_url}?status=pending&page=${page.pending}&created_on=${date}`
   ).then((response) => response.json());
   let task_div = document.getElementsByClassName("task-inner-div")[0];
   resetDiv(task_div);
@@ -38,10 +44,12 @@ let getAssignedTasks = async () => {
 };
 
 let getReviewedTasks = async () => {
+  let worker_id = JSON.parse(localStorage.getItem("data")).worker_id;
+  let tasks_url = `/task/${worker_id}/all`;
   let date = document.getElementById("reviewed-date-input").value;
   let status = document.getElementById("reviewed-select-input").value;
   let data = await fetch(
-    `/tasks?status=${status}&page=${page[status]}&date=${date}`
+    `${tasks_url}?status=${status}&page=${page[status]}&submitted_on=${date}`
   ).then((response) => response.json());
   let task_div = document.getElementsByClassName("task-inner-div")[1];
   resetDiv(task_div);

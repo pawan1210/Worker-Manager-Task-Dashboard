@@ -13,5 +13,16 @@ const isLoggedInWorker = (req, res, next) => {
   }
 };
 
-module.exports.isLoggedInManager = isLoggedInManager;
-module.exports.isLoggedInWorker = isLoggedInWorker;
+const isLoggedInCommon=(req,res,next)=>{
+  if(req.session.user){
+    res.redirect('back');
+  }else{
+    next();
+  }
+}
+
+module.exports.isLoggedIn={
+  manager:isLoggedInManager,
+  worker:isLoggedInWorker,
+  common:isLoggedInCommon
+}

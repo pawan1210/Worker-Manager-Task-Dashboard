@@ -13,7 +13,7 @@
     <nav>
         <h3><a href="">Task- Dashboard</a></h3>
         <div>
-            <li><a href="/worker/profile/edit">Edit-Profile</a></li>
+            <li><a href="/worker/dashboard/profile">Edit-Profile</a></li>
             <li><a href="/logout">Logout</a></li>
         </div>
     </nav>
@@ -53,6 +53,11 @@
         </div>
     </div>
 </body>
-<script src="/worker/dashboard.js"></script>
 
+<script>
+    localStorage.setItem("data", JSON.stringify({
+            worker_id: "<%= worker_id %>"
+    }));
+</script>
+<script src="/worker/dashboard.js"></script>
 </html>

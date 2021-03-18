@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/manager/submitted_task.css">
+    <link rel="stylesheet" href="/task/review_task.css">
     <title>Document</title>
 </head>
 <body>
     <nav>
-        <h3><a href="/dashboard/manager">Task- Dashboard</a></h3>
+        <h3><a href="/manager/dashboard">Task- Dashboard</a></h3>
         <div>
-            <li><a href="/task/add">Add-Task</a></li>
+            <li><a href="/task">Add-Task</a></li>
             <li><a href="/logout">Logout</a></li>
         </div>
     </nav>
     <% if(task.status==="submitted"){ %>
-        <form action="/task/<%= task._id %>/submission" method="POST">
+        <form action="/task/<%= task._id %>/review" method="POST">
             <div style="width: 100%; margin-left: 50px;">
                 <h4>Task Name - <%= task.name %>
                 </h4>
@@ -41,7 +41,7 @@
             <button>Mark</button>
         </form>
     <% } else if(task.status==="approved" || task.status==="rejected"){ %>
-        <form action="/task/<%= task._id %>/mark" method="POST">
+        <form >
             <div style="width: 100%; margin-left: 50px;">
                 <h4>Task Name - <%= task.name %>
                 </h4>

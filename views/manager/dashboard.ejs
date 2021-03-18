@@ -13,7 +13,7 @@
     <nav>
         <h3><a href="">Task- Dashboard</a></h3>
         <div>
-            <li><a href="/task/add">Add-Task</a></li>
+            <li><a href="/task">Add-Task</a></li>
             <li><a href="/logout">Logout</a></li>
         </div>
     </nav>
@@ -70,9 +70,11 @@
     </div>
     </div>
 </body>
-<script src="/manager/dashboard.js"></script>
+
 <script>
-
+    localStorage.setItem("data",JSON.stringify({
+        manager_id:"<%= manager_id %>"
+    }));
 </script>
-
+<script src="/manager/dashboard.js"></script>
 </html>

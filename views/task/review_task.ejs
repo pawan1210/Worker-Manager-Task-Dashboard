@@ -50,6 +50,12 @@
                 <h4>Maximum Points - <%= task.maximum_points %>
                 </h4>
                 <h4>Solution</h4>
+                <% if(file){ %>
+                    <h4>Attached File - </h4>
+                    <a style="color: black;" href="/file/<%= file.file_name %>/view">
+                        <%= file.original_file_name %>
+                    </a>
+                <% } %>
                 <textarea style="width: 90%; height: 100px;" readonly><%= task.solution.text %></textarea> 
             </div>
             <h4>Status - </h4>

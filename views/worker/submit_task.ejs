@@ -17,7 +17,7 @@
         </div>
     </nav>
     
-    <form method="POST" action="/task/<%= task._id %>/submit">
+    <form method="POST" action="/task/<%= task._id %>/submit" enctype="multipart/form-data">
         <div style="width: 100%; margin-left: 50px;">
             <h4>Task Name - <%= task.name %>
             </h4>
@@ -29,7 +29,7 @@
         </div>
         <input type="text" value="submitted" name="status" readonly hidden>
         <textarea name="text" id="" cols="30" rows="10" required></textarea>
-        <input name="files" type="file">
+        <input name="file" type="file">
         <button>Submit</button>
     </form>
 </body>

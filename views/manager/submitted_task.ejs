@@ -26,12 +26,18 @@
                 </h4>
                 <h4>Solution</h4>
                 <p><%= task.solution.text %></p>
+                <% if(file){ %>
+                    <h4>Attached File - </h4>
+                    <a style="color: black;" href="/file/<%= file.file_name %>/view">
+                        <%= file.original_file_name %>
+                    </a>
+                <% } %>
             </div>
             <select name="status">
                 <option value="approved">Accept</option>
                 <option value="rejected">Reject</option>
             </select>
-            <input type="number" placeholder="score" name="score" min="0">
+            <input type="number" placeholder="score" name="score" min="0" required>
             <button>Mark</button>
         </form>
     <% } else if(task.status==="approved" || task.status==="rejected"){ %>

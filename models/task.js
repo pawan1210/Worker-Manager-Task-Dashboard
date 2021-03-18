@@ -33,8 +33,8 @@ var taskSchema = new mongoose.Schema({
     text: {
       type: String,
     },
-    files: {
-      type: [String],
+    file: {
+      type: String,
     },
   },
   created_on: {

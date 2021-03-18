@@ -10,6 +10,10 @@ const middleware = require("./middleware");
 const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
 const dotenv = require("dotenv");
+const multer = require("multer");
+const utils = require("./utils");
+const upload = multer({ storage: utils.storage });
+const path=require("path");
 
 dotenv.config();
 app.use(methodOverride("_method"));
@@ -137,17 +141,16 @@ app.get("/task/:task_id/submit", async (req, res) => {
   res.render("./worker/submit_task", { task: task });
 });
 
-app.post("/task/:task_id/submit", async (req, res) => {
-  let body={};
-  body.status="submitted";
-  body.solution=req.body;
+app.post("/task/:task_id/submit",upload.single("file"), async (req, res) => {
+  let body=saveFiles(req,req.params.task_id);
   await db.Task.findByIdAndUpdate(req.params.task_id,body);
   res.redirect("/dashboard/worker");
 });
 
 app.get("/task/:task_id/mark", async (req, res) => {
   const task = await db.Task.findById(req.params.task_id);
-  res.render("./manager/submitted_task", { task: task });
+ const file = await db.File.findOne({ task_id: req.params.task_id });
+  res.render("./manager/submitted_task", { task: task,file:file });
 });
 
 app.post("/task/:task_id/mark", async (req, res) => {
@@ -158,8 +161,18 @@ app.post("/task/:task_id/mark", async (req, res) => {
 
 app.get("/task/:task_id/view",async(req,res)=>{
   const task=await db.Task.findById(req.params.task_id);
-  res.render("./worker/submitted_task",{task:task});
+  const file = await db.File.findOne({task_id:req.params.task_id});
+  res.render("./worker/submitted_task",{task:task,file:file});
 })
+
+app.get("/file/:file_name/view",(req,res)=>{
+  const filePath = path.join(
+    __dirname,
+    "uploads",
+    req.params.file_name
+  );
+  res.download(filePath);
+});
 
 app.get("/tasks", async (req, res) => {
   console.log(req.query);
@@ -188,5 +201,20 @@ function formatQueryBody(req) {
   if (req.submitted_on) {
     body.submitted_on = req.submitted_on;
   }
+  return body;
+}
+
+function saveFiles(req,task_id){
+  let body = {};
+  body.status = "submitted";
+  if(req.file){
+    req.body.file = req.file.filename;
+    db.File.create({
+      original_file_name: req.file.originalname,
+      file_name: req.file.filename,
+      task_id: task_id,
+    });
+  }
+  body.solution = req.body;
   return body;
 }

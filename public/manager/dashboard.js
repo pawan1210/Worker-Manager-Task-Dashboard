@@ -59,7 +59,7 @@ let getAssignedTasks = async () => {
     h3.appendChild(document.createTextNode(task.name));
     let li1 = document.createElement("li");
     let a1 = document.createElement("a");
-    a1.setAttribute("href", `/task/${task._id}/submission`);
+    a1.setAttribute("href", `/task/${task._id}/mark`);
     a1.appendChild(document.createTextNode("Review"));
     li1.appendChild(a1);
     div.appendChild(h3);
@@ -137,6 +137,11 @@ document
     }
     getAssignedTasks();
   });
+
+
+ document
+   .getElementById("reviewed-search-btn")
+   .addEventListener("click", getReviewedTasks); 
 
 document
   .getElementById("reviewed-increment-button")
